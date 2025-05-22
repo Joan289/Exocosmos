@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: #000000;
+  color: white;
+  min-height: 100vh;
+}
+
+main {
+  width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+.segment-color-0 {
+  background-color: #dc2626;
+} /* Tailwind bg-red-600 */
+.segment-color-1 {
+  background-color: #f97316;
+} /* Tailwind bg-orange-500 */
+.segment-color-2 {
+  background-color: #facc15;
+} /* Tailwind bg-yellow-400 */
+.segment-color-3 {
+  background-color: #22c55e;
+} /* Tailwind bg-green-500 */
+.segment-color-4 {
+  background-color: #2dd4bf;
+} /* Tailwind bg-teal-400 */
+.segment-color-5 {
+  background-color: #3b82f6;
+} /* Tailwind bg-blue-500 */
+.segment-color-6 {
+  background-color: #6366f1;
+} /* Tailwind bg-indigo-500 */
+.segment-color-7 {
+  background-color: #8b5cf6;
+} /* Tailwind bg-purple-500 */
+.segment-color-8 {
+  background-color: #ec4899;
+} /* Tailwind bg-pink-500 */
+.segment-color-9 {
+  background-color: #a3a3a3;
+} /* Tailwind bg-gray-400 */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
+}
+
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(to right, #8b5cf6, #3b82f6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Add this to the end of the file to ensure consistent scrollbar presence */
+html {
+  scrollbar-gutter: stable;
+}

@@ -1,0 +1,239 @@
+### [LOGIN]
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "joan@gmail.com",
+  "password": "Joan289!"
+}
+
+### ✅ Crear un planeta (básico)
+POST http://localhost:3000/planets
+Content-Type: application/json
+
+{
+  "name": "TestPlanet",
+  "description": "Test planet",
+  "mass_earth": 1,
+  "radius_earth": 1,
+  "inclination_deg": 0.1,
+  "rotation_speed_kms": 1,
+  "albedo": 0.3,
+  "star_distance_au": 1,
+  "has_rings": false,
+  "moon_count": 1,
+  "surface_texture_url": "https://example.com/surf.png",
+  "height_texture_url": "https://example.com/height.png",
+  "thumbnail_url": "https://example.com/thumb.png",
+  "planetary_system_id": 1,
+  "planet_type_id": 1,
+  "compounds": [{ "CID": 23987, "percentage": 10 }],
+  "atmosphere": {
+    "pressure_atm": 1.0,
+    "greenhouse_factor": 1.0,
+    "texture_url": "https://example.com/atm.png",
+    "compounds": [{ "CID": 23987, "percentage": 20 }]
+  }
+}
+
+# Esperado: 201
+# SQL: SELECT * FROM planets WHERE name = 'TestPlanet';
+
+### ✅ Obtener planeta por ID (sustituye ID si es necesario)
+GET http://localhost:3000/planets/1
+
+# Esperado: 200 + campos atmosphere y compounds
+
+### ✅ Obtener todos los planetas
+GET http://localhost:3000/planets
+
+# Esperado: 200, cada planeta con atmosphere + compounds
+
+### ✅ Actualizar planeta completo (PUT)
+PUT http://localhost:3000/planets/1
+Content-Type: application/json
+
+{
+  "name": "UpdatedPlanet",
+  "description": "Full update",
+  "mass_earth": 2,
+  "radius_earth": 2,
+  "inclination_deg": 0.5,
+  "rotation_speed_kms": 1,
+  "albedo": 0.4,
+  "star_distance_au": 2,
+  "has_rings": false,
+  "moon_count": 2,
+  "surface_texture_url": "https://example.com/surf2.png",
+  "height_texture_url": "https://example.com/height2.png",
+  "thumbnail_url": "https://example.com/thumb2.png",
+  "planetary_system_id": 1,
+  "planet_type_id": 1,
+  "compounds": [{ "CID": 23987, "percentage": 30 }],
+  "atmosphere": {
+    "pressure_atm": 2.0,
+    "greenhouse_factor": 2.0,
+    "texture_url": "https://example.com/atm2.png",
+    "compounds": [{ "CID": 23987, "percentage": 60 }]
+  }
+}
+
+# Esperado: 200
+
+### ✅ PATCH parcial (atmósfera + compuestos)
+PATCH http://localhost:3000/planets/1
+Content-Type: application/json
+
+{
+  "compounds": [{ "CID": 23987, "percentage": 99 }],
+  "atmosphere": {
+    "pressure_atm": 5,
+    "greenhouse_factor": 5,
+    "texture_url": "https://example.com/patched.png",
+    "compounds": [{ "CID": 23987, "percentage": 10 }]
+  }
+}
+
+# Esperado: 200
+
+### ❌ PATCH con body vacío
+PATCH http://localhost:3000/planets/1
+Content-Type: application/json
+
+{}
+
+# Esperado: 400
+
+### ✅ PATCH solo pressure_atm
+PATCH http://localhost:3000/planets/1
+Content-Type: application/json
+
+{
+  "atmosphere": {
+    "pressure_atm": 9.9
+  }
+}
+
+# Esperado: 200
+
+### ✅ PATCH para eliminar la atmósfera
+PATCH http://localhost:3000/planets/1
+Content-Type: application/json
+
+{
+  "atmosphere": null
+}
+
+# Esperado: 200
+
+### ❌ Crear planeta con compuesto inválido (CID negativo)
+POST http://localhost:3000/planets
+Content-Type: application/json
+
+{
+  "name": "BadCompound",
+  "mass_earth": 1,
+  "radius_earth": 1,
+  "inclination_deg": 0.1,
+  "rotation_speed_kms": 1,
+  "albedo": 0.3,
+  "star_distance_au": 1,
+  "has_rings": false,
+  "moon_count": 0,
+  "surface_texture_url": "https://example.com/surf.png",
+  "height_texture_url": "https://example.com/height.png",
+  "thumbnail_url": "https://example.com/thumb.png",
+  "planetary_system_id": 1,
+  "planet_type_id": 1,
+  "compounds": [{ "CID": -9999, "percentage": 50 }]
+}
+
+# Esperado: error 400+
+
+### ✅ Borrar planeta por ID
+DELETE http://localhost:3000/planets/1
+
+# Esperado: 200
+
+### ✅ PATCH para eliminar todos los compuestos
+PATCH http://localhost:3000/planets/1
+Content-Type: application/json
+
+{
+  "compounds": []
+}
+
+# Esperado: 200
+
+### ❌ PATCH atmósfera sin existencia previa
+PATCH http://localhost:3000/planets/1
+Content-Type: application/json
+
+{
+  "atmosphere": {
+    "pressure_atm": 5.5
+  }
+}
+
+# Esperado: 400
+
+### ❌ Crear atmósfera con porcentaje total > 100
+POST http://localhost:3000/planets
+Content-Type: application/json
+
+{
+  "name": "OverCompound",
+  "mass_earth": 1,
+  "radius_earth": 1,
+  "inclination_deg": 0.1,
+  "rotation_speed_kms": 1,
+  "albedo": 0.3,
+  "star_distance_au": 1,
+  "has_rings": false,
+  "moon_count": 1,
+  "surface_texture_url": "https://example.com/surf.png",
+  "height_texture_url": "https://example.com/height.png",
+  "thumbnail_url": "https://example.com/thumb.png",
+  "planetary_system_id": 1,
+  "planet_type_id": 1,
+  "atmosphere": {
+    "pressure_atm": 1.0,
+    "greenhouse_factor": 1.0,
+    "texture_url": "https://example.com/atm.png",
+    "compounds": [
+      { "CID": 23987, "percentage": 60 },
+      { "CID": 23988, "percentage": 50 }
+    ]
+  }
+}
+
+# Esperado: 400
+
+### ❌ Crear planeta en sistema ajeno
+# Requiere obtener planetary_system_id de otro usuario
+POST http://localhost:3000/planets
+Content-Type: application/json
+
+{
+  "name": "ForbiddenPlanet",
+  "mass_earth": 1,
+  "radius_earth": 1,
+  "inclination_deg": 0.1,
+  "rotation_speed_kms": 1,
+  "albedo": 0.3,
+  "star_distance_au": 1,
+  "has_rings": false,
+  "moon_count": 1,
+  "surface_texture_url": "https://example.com/surf.png",
+  "height_texture_url": "https://example.com/height.png",
+  "thumbnail_url": "https://example.com/thumb.png",
+  "planetary_system_id": 99999,
+  "planet_type_id": 1
+}
+
+# Esperado: 403
+
+### ❌ Violaciones de tipo planetario
+# Cambia planet_type_id para probar: masa, radio, anillos, superficie, lunas
+
+# Esperado: 400 en cada caso

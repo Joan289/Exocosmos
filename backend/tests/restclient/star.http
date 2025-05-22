@@ -1,0 +1,114 @@
+### [LOGIN] Obtener cookie válida
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "joan@gmail.com",
+  "password": "Joan289!"
+}
+
+### ✅ Listar todas las estrellas
+GET http://localhost:3000/stars
+
+# Esperado: 200
+# SQL: SELECT * FROM stars;
+
+### ✅ Obtener una estrella por ID (reemplaza 1 si lo sabes)
+GET http://localhost:3000/stars/2
+
+# Esperado: 200
+# SQL: SELECT * FROM stars WHERE star_id = 1;
+
+### ✅ Obtener campos específicos
+GET http://localhost:3000/stars/2?fields=name,mass_solar
+
+# Esperado: solo esos campos
+# SQL: SELECT name, mass_solar FROM stars WHERE star_id = 1;
+
+### ✅ Filtrar por nombre (usa un nombre que exista)
+GET http://localhost:3000/stars?name=Sys-Manual-Test
+
+# Esperado: estrellas con ese nombre
+# SQL: SELECT * FROM stars WHERE name = 'Filter-1714920000000';
+
+### ✅ Filtrar por masa solar
+GET http://localhost:3000/stars?mass_solar=1.0
+
+# SQL: SELECT * FROM stars WHERE mass_solar = 1.0;
+
+### ✅ Filtrar por radio solar
+GET http://localhost:3000/stars?radius_solar=1.0
+
+# SQL: SELECT * FROM stars WHERE radius_solar = 1.0;
+
+### ✅ PUT actualizar completamente una estrella
+PUT http://localhost:3000/stars/2
+Content-Type: application/json
+
+{
+  "name": "Updated Star PUT",
+  "description": "A fully updated star via PUT",
+  "mass_solar": 3.5,
+  "radius_solar": 2.1,
+  "thumbnail_url": "https://example.com/updated-star-put.jpg"
+}
+
+# Esperado: 200
+# SQL: SELECT * FROM stars WHERE star_id = 1;
+
+### ✅ PATCH actualizar parcialmente
+PATCH http://localhost:3000/stars/1
+Content-Type: application/json
+
+{
+  "mass_solar": 2.2
+}
+
+# Esperado: 200
+# SQL: SELECT mass_solar FROM stars WHERE star_id = 1;
+
+### ❌ POST no permitido
+POST http://localhost:3000/stars
+Content-Type: application/json
+
+{}
+
+# Esperado: 405
+
+### ❌ DELETE no permitido
+DELETE http://localhost:3000/stars/1
+
+# Esperado: 405
+
+### ❌ PATCH con body vacío
+PATCH http://localhost:3000/stars/1
+Content-Type: application/json
+
+{}
+
+# Esperado: 400
+
+### ❌ PUT con tipo inválido
+PUT http://localhost:3000/stars/1
+Content-Type: application/json
+
+{
+  "name": "Valid Name",
+  "description": "Valid Description",
+  "mass_solar": "not-a-number",
+  "radius_solar": 1.0,
+  "thumbnail_url": "https://example.com/valid.jpg"
+}
+
+# Esperado: 400
+# Campo `mass_solar` inválido
+
+### ❌ GET con ID inválido
+GET http://localhost:3000/stars/not-a-number
+
+# Esperado: 400
+
+### ❌ GET con ID inexistente
+GET http://localhost:3000/stars/9999999
+
+# Esperado: 404

@@ -1,0 +1,63 @@
+### [LOGIN] Obtener cookie válida
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "joan@gmail.com",
+  "password": "Joan289!"
+}
+
+### ✅ Get planet type by ID
+GET http://localhost:3000/planet-types/1
+
+# Esperado: 200
+# SQL: SELECT * FROM planet_types WHERE planet_type_id = 1;
+
+### ✅ Get all planet types
+GET http://localhost:3000/planet-types
+
+# Esperado: 200
+# SQL: SELECT * FROM planet_types;
+
+### ❌ Get non-existent planet type (ID 999999)
+GET http://localhost:3000/planet-types/999999
+
+# Esperado: 404
+# SQL: SELECT * FROM planet_types WHERE planet_type_id = 999999; => 0 filas
+
+### ❌ Get invalid ID format
+GET http://localhost:3000/planet-types/abc
+
+# Esperado: 400 (error de validación)
+
+### ❌ POST planet type (no permitido)
+POST http://localhost:3000/planet-types
+Content-Type: application/json
+
+{
+  "name": "New Type",
+  "min_mass": 0,
+  "max_mass": 10,
+  "min_radius": 0,
+  "max_radius": 10,
+  "has_rings": false,
+  "has_surface": true,
+  "max_moons": 5
+}
+
+# Esperado: 405 (método no permitido)
+
+### ❌ PUT planet type (no permitido)
+PUT http://localhost:3000/planet-types/1
+Content-Type: application/json
+
+{
+  "name": "Updated Type"
+}
+
+# Esperado: 405
+
+### ❌ DELETE planet type (no permitido)
+DELETE http://localhost:3000/planet-types/1
+
+# Esperado: 405

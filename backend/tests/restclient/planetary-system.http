@@ -1,0 +1,45 @@
+### [1] Login para obtener cookie válida
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "joan@gmail.com",
+  "password": "Joan289!"
+}
+
+### [2] Crear sistema planetario
+POST http://localhost:3000/planetary-systems
+Content-Type: application/json
+
+{
+  "name": "Sistem",
+  "distance_ly": 20,
+  "thumbnail_url": "http://example.com"
+}
+
+# Esperado: 201
+# Guarda el ID devuelto como planetary_system_id y star_id
+# SQL: SELECT * FROM planetary_systems WHERE name = 'Sys-Manual-Test';
+
+### [3] Obtener el sistema creado (reemplaza ID si hace falta)
+GET http://localhost:3000/planetary-systems/1/full
+
+# Esperado: 200 y que name sea 'Sys-Manual-Test'
+
+### [4] Borrar el sistema
+DELETE http://localhost:3000/planetary-systems/1
+
+# Esperado: 200
+# SQL: SELECT * FROM planetary_systems WHERE planetary_system_id = 1; => 0 filas
+# SQL: SELECT * FROM stars WHERE star_id = ...; => 0 filas también
+
+### [5] Intentar recuperar el sistema borrado
+GET http://localhost:3000/planetary-systems/1
+
+# Esperado: 404
+
+### [6] Intentar recuperar la estrella borrada (usa el star_id del paso 2)
+GET http://localhost:3000/stars/2
+
+# Esperado: 404

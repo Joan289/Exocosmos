@@ -1,0 +1,136 @@
+@useCookieJar
+
+### 1. Register a new user
+POST https://exocosmos-backend.fly.dev/auth/register
+Content-Type: application/json
+
+{
+  "username": "resttestuser",
+  "email": "resttest@example.com",
+  "password": "Test1234!@#",
+  "profile_picture_url": "https://example.com/profile.jpg"
+}
+
+# SQL: SELECT * FROM users WHERE email = 'resttest@example.com';
+
+### 2. Try to register with duplicate email
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "anotheruser",
+  "email": "resttest@example.com",
+  "password": "Test1234!@#",
+  "profile_picture_url": "https://example.com/another.jpg"
+}
+
+# Esperado: status 409
+# SQL: COUNT(*) debe seguir siendo 1
+# SQL: SELECT COUNT(*) FROM users WHERE email = 'resttest@example.com';
+
+### 3. Register with invalid data
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "",
+  "email": "bademail",
+  "password": "123",
+  "profile_picture_url": "notaurl"
+}
+
+# Esperado: status 400
+
+### 4. Login with correct credentials
+POST https://exocosmos-backend.fly.dev/auth/login
+Content-Type: application/json
+
+{
+  "email": "resttest@example.com",
+  "password": "Test1234!@#"
+}
+
+# Esperado: 200 y cookie
+# SQL: SELECT * FROM users WHERE email = 'resttest@example.com';
+
+### 5. Login with wrong password
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "resttest@example.com",
+  "password": "wrongpassword"
+}
+
+# Esperado: status 401
+
+### 6. Login with non-existent email
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "idontexist@example.com",
+  "password": "any"
+}
+
+# Esperado: status 401
+
+### 7. Get /auth/me (should work with cookie)
+GET https://exocosmos-backend.fly.dev/auth/me
+
+# Esperado: status 200 y datos del usuario
+# SQL: SELECT * FROM users WHERE email = 'resttest@example.com';
+
+### 8. Get /auth/me without cookie
+# Elimina @useCookieJar arriba para probar este endpoint sin cookie
+
+GET http://localhost:3000/auth/me
+# Esperado: status 401
+
+### 9. Update profile
+PATCH http://localhost:3000/auth/me
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "profile_picture_url": "https://example.com/updated.jpg"
+}
+
+# Esperado: status 200
+# SQL: SELECT username, profile_picture_url FROM users WHERE email = 'resttest@example.com';
+
+### 10. Update password
+PATCH http://localhost:3000/auth/me
+Content-Type: application/json
+
+{
+  "password": "NewTest1234!@#"
+}
+
+# Esperado: status 200
+# SQL no puede mostrar password, pero prueba haciendo login:
+
+### 11. Login with new password
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "resttest@example.com",
+  "password": "NewTest1234!@#"
+}
+
+# Esperado: 200
+
+### 12. Logout
+POST http://localhost:3000/auth/logout
+
+# Esperado: 200
+# Luego intenta /auth/me para confirmar que no se puede acceder.
+
+### 13. Delete account
+# Re-loggear si es necesario antes (para tener cookie válida)
+
+DELETE http://localhost:3000/auth/me
+
+# Esperado: 200
+# SQL: SELECT * FROM users WHERE email = 'resttest@example.com'; => 0 filas

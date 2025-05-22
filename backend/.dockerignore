@@ -1,0 +1,11 @@
+node_modules
+dist
+tests
+.env
+*.log
+*.http
+*.sql
+script.sql
+Dockerfile
+fly.toml
+public/uploads/*
