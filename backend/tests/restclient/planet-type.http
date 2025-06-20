@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "joan@gmail.com",
-  "password": "Joan289!"
+  "email": "hola@gmail.com",
+  "password": "Hola289!"
 }
 
 ### ✅ Get planet type by ID
